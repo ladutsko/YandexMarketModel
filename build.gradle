@@ -1,0 +1,63 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()  
+    }
+
+    dependencies {
+        classpath 'org.owasp:dependency-check-gradle:3.3.0'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.owasp.dependencycheck'
+
+description 'Yandex Market Model'
+group = 'com.github.ladutsko'
+version = '1.0.0'
+archivesBaseName = 'yandex-market-model'
+
+repositories {
+    mavenLocal()
+    jcenter()  
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+    compile 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.9.6'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.6'
+
+    runtime 'com.fasterxml.woodstox:woodstox-core:5.1.0'
+
+    testCompile 'uk.co.jemos.podam:podam:7.1.1.RELEASE'
+
+    testRuntime 'ch.qos.logback:logback-classic:1.0.13'
+}
+
+jar {
+    into('META-INF') {
+        from files('LICENSE.md')
+    }
+
+    manifest {
+        attributes('Implementation-Title' : project.description,
+                   'Implementation-Version' : project.version,
+                   'Implementation-Vendor' : 'George Ladutsko')
+    }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
