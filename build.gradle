@@ -1,7 +1,8 @@
 buildscript {
     repositories {
-        mavenLocal()
+        mavenCentral()
         jcenter()  
+        gradlePluginPortal()
     }
 
     dependencies {
@@ -45,6 +46,22 @@ jar {
         attributes('Implementation-Title' : project.description,
                    'Implementation-Version' : project.version,
                    'Implementation-Vendor' : 'George Ladutsko')
+    }
+}
+
+fatJar {
+    into('META-INF') {
+        from files('LICENSE.md')
+    }
+
+    manifest {
+        attributes('Implementation-Title' : project.description,
+                'Implementation-Version' : project.version,
+                'Implementation-Vendor' : 'George Ladutsko')
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
