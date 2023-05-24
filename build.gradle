@@ -1,7 +1,7 @@
 buildscript {
     repositories {
-        mavenLocal()
-        jcenter()  
+        mavenCentral()
+        jcenter()
     }
 
     dependencies {
@@ -46,6 +46,22 @@ jar {
                    'Implementation-Version' : project.version,
                    'Implementation-Vendor' : 'George Ladutsko')
     }
+}
+
+task customFatJar(type: Jar) {
+    into('META-INF') {
+        from files('LICENSE.md')
+    }
+
+    manifest {
+        attributes('Implementation-Title' : project.description,
+                'Implementation-Version' : project.version,
+                'Implementation-Vendor' : 'George Ladutsko')
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 task javadocJar(type: Jar) {
