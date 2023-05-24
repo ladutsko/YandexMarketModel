@@ -49,7 +49,7 @@ jar {
     }
 }
 
-fatJar {
+task customFatJar(type: Jar) {
     into('META-INF') {
         from files('LICENSE.md')
     }
@@ -60,9 +60,9 @@ fatJar {
                 'Implementation-Vendor' : 'George Ladutsko')
     }
 
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
 }
 
 task javadocJar(type: Jar) {
